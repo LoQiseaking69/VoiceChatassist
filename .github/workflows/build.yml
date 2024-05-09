@@ -23,21 +23,21 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install toga spacy nltk pyttsx3 cryptography SpeechRecognition
-
-    - name: Install additional dependencies
-      run: |
-        pip install huggingface_hub  # if transformers are used in the project
+        pip install toga spacy nltk pyttsx3 cryptography SpeechRecognition huggingface_hub
 
     - name: Download NLP models
       run: |
         python -m spacy download en_core_web_trf
         python -m nltk.downloader punkt
 
+    - name: Install PyInstaller
+      run: |
+        pip install pyinstaller
+
     - name: Create Executable
       run: |
         pyinstaller --onefile --clean --add-data "voice-activated-assistant/*.py;voice-activated-assistant" voice-activated-assistant/main.py
-      # Adjust the add-data path if your source files are located in a different folder
+      shell: pwsh
 
     - name: Upload Executable
       uses: actions/upload-artifact@v2
