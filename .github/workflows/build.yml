@@ -3,39 +3,42 @@ name: Build Voice-Activated Chat System Executable
 on:
   push:
     branches:
-      - main  # Triggers the workflow on pushes to the main branch
+      - main
     paths:
-      - 'voice-activated-assistant/**'  # Triggers only for changes within this directory
+      - 'voice-activated-assistant/**'
 
 jobs:
   build:
-    runs-on: windows-latest  # Uses a Windows runner to ensure compatibility
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  # Checks out your repository
+      uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'  # Ensures Python 3.9 is used; adjust according to your project's requirements
+        python-version: '3.9'
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip  # Upgrades pip
-        pip install fastapi uvicorn[standard] pydantic pyinstaller sqlalchemy asyncpg aiosqlite  # Install your required packages, including database drivers if necessary
+        python -m pip install --upgrade pip
+        pip install fastapi uvicorn[standard] pydantic pyinstaller sqlalchemy asyncpg aiosqlite cryptography transformers spacy nltk SpeechRecognition pyttsx3
 
-    - name: Install additional dependencies
-      run: pip install spacy pyttsx3 SpeechRecognition  # Ensures NLP and speech recognition libraries are installed
+    - name: Install additional dependencies for advanced ML models
+      run: |
+        pip install huggingface_hub
 
     - name: Download NLP models
-      run: python -m spacy download en_core_web_sm  # Downloads necessary spaCy NLP models
+      run: |
+        python -m spacy download en_core_web_trf
+        python -m nltk.downloader punkt
 
     - name: Create Executable
-      run: pyinstaller --onefile --clean voice-activated-assistant/main.py  # Path to your main FastAPI app
+      run: pyinstaller --onefile --clean --add-data "voice-activated-assistant/*.py;voice-activated-assistant" voice-activated-assistant/main.py
 
     - name: Upload Executable
       uses: actions/upload-artifact@v2
       with:
         name: voice-activated-chat-system-executable
-        path: dist/*.exe  # Uploads the built executable
+        path: dist/*.exe
