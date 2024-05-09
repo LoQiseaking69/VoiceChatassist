@@ -11,7 +11,7 @@ class MLModel:
         model_sentiment = AutoModelForSequenceClassification.from_pretrained(model_name_sentiment)
         self.sentiment_analyzer = pipeline('sentiment-analysis', model=model_sentiment, tokenizer=tokenizer_sentiment)
 
-        # Initialize the summarization model
+        # Initialize the summarization model 
         model_name_summarization = "facebook/bart-large-cnn"
         tokenizer_summarization = AutoTokenizer.from_pretrained(model_name_summarization)
         model_summarization = AutoModelForSeq2SeqLM.from_pretrained(model_name_summarization)
