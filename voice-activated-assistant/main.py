@@ -3,7 +3,6 @@ import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN
 from cryptography.fernet import Fernet
-
 # Import custom modules
 from .database_interaction import ChatDatabase
 from .ML import MLModel
