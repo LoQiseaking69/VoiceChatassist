@@ -14,6 +14,7 @@ source venv/bin/activate
 echo "Setting up environment variables..."
 export DATABASE_PATH="chat_memory.db"
 export MODEL_PATH="models/"
+export ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")  # Generating a new encryption key
 
 # Upgrade pip to its latest version
 echo "Upgrading pip..."
@@ -21,7 +22,7 @@ pip install --upgrade pip
 
 # Install required Python packages locally
 echo "Installing required Python packages..."
-pip install fastapi uvicorn sqlalchemy aiosqlite spacy pyttsx3 speech_recognition streamlit streamlit_webrtc
+pip install toga spacy nltk pyttsx3 cryptography SpeechRecognition
 
 # Download and setup SpaCy models
 echo "Downloading and setting up SpaCy models..."
@@ -33,11 +34,11 @@ python -m nltk.downloader punkt
 
 # Ensure the database is initialized properly with error handling
 echo "Initializing the database..."
-python -c 'import asyncio; from database_interaction import ChatDatabase; db = ChatDatabase("$DATABASE_PATH"); asyncio.run(db.init_db())' || echo "Failed to initialize the database. Check the logs for details."
+python -c 'import asyncio; from database_interaction import ChatDatabase; db = ChatDatabase("chat_memory.db"); asyncio.run(db.init_db())' || echo "Failed to initialize the database. Check the logs for details."
 
-# Start the application
-echo "Starting the application..."
-uvicorn main:app --host 0.0.0.0 --port 5000 || echo "Failed to start the application. Check the logs for details."
+# The Toga app runs as a standalone GUI application
+echo "Launching the application..."
+python -m main
 
 echo "Deployment complete."
 
