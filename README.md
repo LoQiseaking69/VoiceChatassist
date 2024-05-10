@@ -1,6 +1,7 @@
 # Voice-Activated Personal Assistant
 ___
 [![Build Voice-Activated Chat System Executable](https://github.com/LoQiseaking69/VoiceChatassist/actions/workflows/build.yml/badge.svg)](https://github.com/LoQiseaking69/VoiceChatassist/actions/workflows/build.yml)
+*is what it says when you're comfortable with easy...
 ___
 ![Voice-Activated Personal Assistant](chatv2.png)
 
