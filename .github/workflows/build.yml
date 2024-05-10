@@ -10,11 +10,11 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: voice-activated-assistant
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -24,29 +24,28 @@ jobs:
         run: |
           python -m venv venv
           .\venv\Scripts\activate
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          path: voice-activated-assistant
+        working-directory: ${{github.workspace}}/voice-activated-assistant
 
       - name: Upgrade pip and install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+        working-directory: ${{github.workspace}}/voice-activated-assistant
 
       - name: Build and package application using PyInstaller
         run: |
-          pyinstaller --onefile --windowed --icon=icons/windows/icon.ico main.py
+          pyinstaller --onefile --windowed main.py
+        working-directory: ${{github.workspace}}/voice-activated-assistant
 
       - name: Deactivate virtual environment and clean up cache
         run: |
           deactivate
           git clean -ffdx
           rm -rf venv/
+        working-directory: ${{github.workspace}}/voice-activated-assistant
 
       - name: Upload Windows Executable
         uses: actions/upload-artifact@v2
         with:
           name: windows-executable
-          path: dist/main.exe
+          path: ${{github.workspace}}/voice-activated-assistant/dist/main.exe
