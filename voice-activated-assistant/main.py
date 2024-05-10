@@ -12,22 +12,19 @@ from nlp_processing import listen_and_respond, analyze_text
 # Constants
 LOG_FILE = 'app.log'
 DATABASE_FILE = 'chat_memory.db'
+ENCRYPTION_KEY_FILE = 'encryption_key.key'  # File containing the encryption key
 
-# Function to generate or retrieve the encryption key
-def generate_or_retrieve_key():
-    # Check if a key exists in a file
+# Function to retrieve the encryption key
+def retrieve_encryption_key():
     try:
-        with open('encryption_key.key', 'rb') as key_file:
+        with open(ENCRYPTION_KEY_FILE, 'rb') as key_file:
             key = key_file.read()
     except FileNotFoundError:
-        # Generate a new key and save it to a file
-        key = Fernet.generate_key()
-        with open('encryption_key.key', 'wb') as key_file:
-            key_file.write(key)
+        raise FileNotFoundError("Encryption key file not found.")
     return key
 
 # Initialize the logger with encryption
-encryption_key = generate_or_retrieve_key()
+encryption_key = retrieve_encryption_key()
 logger = CustomLogger(LOG_FILE, encryption_key=encryption_key)
 
 # Initialize the ML model
