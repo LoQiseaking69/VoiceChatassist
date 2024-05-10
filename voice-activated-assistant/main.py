@@ -9,7 +9,7 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from cryptography.fernet import Fernet
 from database_interaction import ChatDatabase
-from ml import MLModel
+from ML import MLModel
 from speech_recognition import recognizer, microphone
 from utilities import CustomLogger, EncryptedFileHandler
 from nlp_processing import listen_and_respond, analyze_text
@@ -26,10 +26,6 @@ def retrieve_encryption_key():
         raise KeyError("Encryption key not found in environment variables.")
     return key
 
-# Initialize the logger with encryption
-encryption_key = retrieve_encryption_key()
-logger = CustomLogger(LOG_FILE, encryption_key=encryption_key)
-
 # Function to check and download necessary spaCy models
 def ensure_spacy_models(*models):
     for model in models:
@@ -40,6 +36,10 @@ def ensure_spacy_models(*models):
             print(f"Model {model} not found. Installing...")
             # Install the model using subprocess to ensure compatibility with the environment
             subprocess.check_call([sys.executable, "-m", "spacy", "download", model])
+
+# Initialize the logger with encryption
+encryption_key = retrieve_encryption_key()
+logger = CustomLogger(LOG_FILE, encryption_key=encryption_key)
 
 # Initialize the ML model and ensure necessary models are downloaded
 ml_model = MLModel(logger)
