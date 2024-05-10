@@ -1,0 +1,12 @@
+toga
+cryptography
+spacy
+nltk
+pyttsx3
+SpeechRecognition
+transformers
+aiosqlite
+huggingface_hub
+beautifulsoup4
+requests
+python-dateutil
