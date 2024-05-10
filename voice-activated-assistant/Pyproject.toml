@@ -1,19 +1,19 @@
 [build-system]
-requires = ["setuptools", "wheel", "briefcase"]
+requires = ["setuptools>=58.0.0", "wheel", "briefcase"]
 build-backend = "briefcase.app"
 
 [tool.briefcase]
 project_name = "voice_activated_chat_system"
 formal_name = "Voice Activated Chat System"
-application_id = ""
+application_id = "com.hermitech.voiceassistant"  # Application identifier aligned with the bundle ID
 version = "0.1.0"
-description = "A voice-activated personal assistant designed to interact and analyze speech."
+description = "A voice-activated personal assistant designed to interact and analyze speech, incorporating advanced NLP and ML capabilities."
 authors = [{name = "Ant Greene", email = "Reel0112358.13@proton.me"}]
-url = ""
+url = ""  # Intentionally left blank
 license = "MIT"
 
 [tool.briefcase.app.voice_activated_chat_system]
-bundle = ""
+bundle = "com.hermitech.voiceassistant"  # Bundle ID as "HermiTech"
 icon = "icons/windows/icon.ico"
 requires = [
   "toga>=0.3.0.dev26",
