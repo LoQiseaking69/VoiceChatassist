@@ -20,15 +20,17 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Briefcase
-        run: pip install briefcase
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install briefcase
 
       - name: Create and build Windows application
         run: |
           cd voice-activated-assistant
-          briefcase create windows
-          briefcase build windows
-          briefcase package windows
+          briefcase create windows --bundle com.hermitech.voiceassistant
+          briefcase build windows --bundle com.hermitech.voiceassistant
+          briefcase package windows --bundle com.hermitech.voiceassistant
 
       - name: Upload Windows Executable
         uses: actions/upload-artifact@v2
