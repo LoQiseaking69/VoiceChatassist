@@ -8,7 +8,6 @@ formal_name = "Voice Activated Chat System"
 version = "0.1.0"
 description = "A voice-activated personal assistant designed to interact and analyze speech, incorporating advanced NLP and ML capabilities."
 authors = [{name = "Ant Greene", email = "Reel0112358.13@proton.me"}]
-url = ""  # Intentionally left blank
 license = "MIT"
 
 [tool.briefcase.app.voice_activated_chat_system]
@@ -26,12 +25,10 @@ requires = [
   "beautifulsoup4>=4.9.3",
   "requests>=2.25",
   "python-dateutil>=2.8.1",
-  "bs4",  # Alias for beautifulsoup4
-  "logging"  # Note: logging is part of the Python Standard Library and does not require installation
+  "bs4",
+  "logging"
 ]
-sources = [
-  "voice-activated-assistant/"
-]
+sources = ["voice-activated-assistant/"]
 
 [tool.briefcase.app.voice_activated_chat_system.windows]
 python_version = "3.9"
