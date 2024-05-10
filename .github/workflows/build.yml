@@ -1,4 +1,4 @@
-name: Build Voice-Activated Chat System Executable
+name: Build and Deploy Voice-Activated Chat System for Windows
 
 on:
   push:
@@ -8,39 +8,30 @@ on:
       - 'voice-activated-assistant/**'
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install toga spacy nltk pyttsx3 cryptography SpeechRecognition huggingface_hub
+      - name: Install Briefcase
+        run: pip install briefcase
 
-    - name: Download NLP models
-      run: |
-        python -m spacy download en_core_web_trf
-        python -m nltk.downloader punkt
+      - name: Create and build Windows application
+        run: |
+          cd voice-activated-assistant
+          briefcase create windows
+          briefcase build windows
+          briefcase package windows
 
-    - name: Install PyInstaller
-      run: |
-        pip install pyinstaller
-
-    - name: Create Executable
-      run: |
-        pyinstaller --onefile --clean --add-data "voice-activated-assistant/*.py;voice-activated-assistant" voice-activated-assistant/main.py
-      shell: pwsh
-
-    - name: Upload Executable
-      uses: actions/upload-artifact@v2
-      with:
-        name: voice-activated-chat-system-executable
-        path: dist/*.exe
+      - name: Upload Windows Executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-executable
+          path: windows/voice-activated-assistant/dist/*.msi
