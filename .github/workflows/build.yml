@@ -20,20 +20,29 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+      - name: Create virtual environment
+        run: python -m venv venv
+        working-directory: voice-activated-assistant
+
+      - name: Activate virtual environment
         run: |
+          .\venv\Scripts\activate
           pip install --upgrade pip
-          pip install briefcase
+        working-directory: voice-activated-assistant
 
-      - name: Build Windows application
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        working-directory: voice-activated-assistant
+
+      - name: Build and Package Windows application
         run: |
-          cd voice-activated-assistant
           briefcase build windows
-
-      - name: Package Windows application
-        run: |
-          cd voice-activated-assistant
           briefcase package windows
+        working-directory: voice-activated-assistant
+
+      - name: Deactivate virtual environment
+        run: deactivate
+        working-directory: voice-activated-assistant
 
       - name: Upload Windows Executable
         uses: actions/upload-artifact@v2
