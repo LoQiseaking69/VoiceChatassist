@@ -13,7 +13,7 @@ license = "MIT"
 [tool.briefcase.app.voice_activated_chat_system]
 icon = "icons/windows/icon.ico"
 requires = [
-  "toga>=0.3.0.dev26",
+  "kivy>=2.0.0",
   "cryptography>=3.4",
   "spacy>=3.0",
   "nltk>=3.6",
@@ -24,9 +24,7 @@ requires = [
   "huggingface_hub>=0.1.0",
   "beautifulsoup4>=4.9.3",
   "requests>=2.25",
-  "python-dateutil>=2.8.1",
-  "bs4",
-  "logging"
+  "python-dateutil>=2.8.1"
 ]
 sources = ["voice-activated-assistant/"]
 
