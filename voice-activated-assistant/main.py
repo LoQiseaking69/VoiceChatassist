@@ -1,3 +1,4 @@
+import os
 import asyncio
 from kivy.app import App
 from kivy.uix.label import Label
@@ -13,15 +14,13 @@ from nlp_processing import listen_and_respond, analyze_text
 # Constants
 LOG_FILE = 'app.log'
 DATABASE_FILE = 'chat_memory.db'
-ENCRYPTION_KEY_FILE = 'encryption_key.key'
 
-# Function to retrieve the encryption key
+# Function to retrieve the encryption key from environment variable
 def retrieve_encryption_key():
     try:
-        with open(ENCRYPTION_KEY_FILE, 'rb') as key_file:
-            key = key_file.read()
-    except FileNotFoundError:
-        raise FileNotFoundError("Encryption key file not found.")
+        key = os.environ['ENCRYPTION_KEY'].encode()
+    except KeyError:
+        raise KeyError("Encryption key not found in environment variables.")
     return key
 
 # Initialize the logger with encryption
