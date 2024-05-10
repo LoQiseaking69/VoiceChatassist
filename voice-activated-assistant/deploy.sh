@@ -14,7 +14,8 @@ source venv/bin/activate
 echo "Setting up environment variables..."
 export DATABASE_PATH="chat_memory.db"
 export MODEL_PATH="models/"
-export ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")  # Generating a new encryption key
+# Generate a new encryption key and export it
+export ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 
 # Upgrade pip to its latest version
 echo "Upgrading pip..."
@@ -34,7 +35,7 @@ python -m nltk.downloader punkt
 
 # Ensure the database is initialized properly with error handling
 echo "Initializing the database..."
-python -c 'import asyncio; from voice_activated_assistant.database_interaction import ChatDatabase; db = ChatDatabase("${DATABASE_PATH}"); asyncio.run(db.init_db())' || echo "Failed to initialize the database. Check the logs for details."
+python -c 'import asyncio; from database_interaction import ChatDatabase; db = ChatDatabase("${DATABASE_PATH}"); asyncio.run(db.init_db())' || echo "Failed to initialize the database. Check the logs for details."
 
 # Launch the application
 echo "Launching the application..."
