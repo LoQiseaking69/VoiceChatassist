@@ -1,3 +1,4 @@
+import spacy
 from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import EncoderDecoderModel, BertTokenizer
 from functools import lru_cache
@@ -6,6 +7,9 @@ import logging
 class MLModel:
     def __init__(self, logger):
         self.logger = logger
+
+        # Initialize spaCy model
+        self.nlp = self.load_spacy_model("en_core_web_trf")
 
         # Initialize the sentiment analysis model
         model_name_sentiment = "distilbert-base-uncased-finetuned-sst-2-english"
@@ -24,6 +28,15 @@ class MLModel:
         tokenizer_encoder_decoder = BertTokenizer.from_pretrained(model_name_encoder_decoder)
         model_encoder_decoder = EncoderDecoderModel.from_pretrained(model_name_encoder_decoder)
         self.encoder_decoder = pipeline('text2text-generation', model=model_encoder_decoder, tokenizer=tokenizer_encoder_decoder)
+
+    def load_spacy_model(self, model_name):
+        try:
+            nlp = spacy.load(model_name)
+            self.logger.log_info(f"Loaded spaCy model {model_name}")
+            return nlp
+        except Exception as e:
+            self.logger.log_error(f"Failed to load spaCy model {model_name}: {e}")
+            raise
 
     @lru_cache(maxsize=100)
     def analyze_sentiment(self, text):
