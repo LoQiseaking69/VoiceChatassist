@@ -52,7 +52,7 @@ class CustomLogger:
 
 if __name__ == "__main__":
     # In practice, retrieve an existing encryption key securely
-    key = Fernet.generate_key()  # For illustration; use a secure storage solution in production
+    key = Fernet.generate_key()
     logger = CustomLogger("secure_system_logs.log", encryption_key=key)
     logger.log_interaction("Hello", "Hi there!")
     logger.log_error("This is an error message.")
