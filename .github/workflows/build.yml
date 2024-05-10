@@ -15,11 +15,6 @@ jobs:
         working-directory: voice-activated-assistant
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          path: voice-activated-assistant
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -29,6 +24,11 @@ jobs:
         run: |
           python -m venv venv
           .\venv\Scripts\activate
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: voice-activated-assistant
 
       - name: Upgrade pip and install dependencies
         run: |
