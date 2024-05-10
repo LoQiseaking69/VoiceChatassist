@@ -35,7 +35,12 @@ python -m nltk.downloader punkt
 
 # Ensure the database is initialized properly with error handling
 echo "Initializing the database..."
-python -c 'import asyncio; from database_interaction import ChatDatabase; db = ChatDatabase("${DATABASE_PATH}"); asyncio.run(db.init_db())' || echo "Failed to initialize the database. Check the logs for details."
+if python -c 'import asyncio; from database_interaction import ChatDatabase; db = ChatDatabase("${DATABASE_PATH}"); asyncio.run(db.init_db())'; then
+    echo "Database initialized successfully."
+else
+    echo "Failed to initialize the database. Check the logs for details."
+    exit 1
+fi
 
 # Launch the application
 echo "Launching the application..."
