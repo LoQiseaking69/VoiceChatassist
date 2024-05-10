@@ -35,10 +35,9 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build and package application
+      - name: Build and package application using PyInstaller
         run: |
-          briefcase build windows
-          briefcase package windows
+          pyinstaller --onefile --windowed --icon=icons/windows/icon.ico main.py
 
       - name: Deactivate virtual environment and clean up cache
         run: |
@@ -50,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: windows-executable
-          path: windows/dist/*.msi
+          path: dist/main.exe
