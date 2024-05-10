@@ -5,7 +5,6 @@ build-backend = "briefcase.app"
 [tool.briefcase]
 project_name = "voice_activated_chat_system"
 formal_name = "Voice Activated Chat System"
-application_id = "com.example.voiceassistant"  # Placeholder or generic application identifier
 version = "0.1.0"
 description = "A voice-activated personal assistant designed to interact and analyze speech, incorporating advanced NLP and ML capabilities."
 authors = [{name = "Ant Greene", email = "Reel0112358.13@proton.me"}]
