@@ -1,4 +1,7 @@
 import os
+import spacy
+import subprocess
+import sys
 import asyncio
 from kivy.app import App
 from kivy.uix.label import Label
@@ -27,8 +30,20 @@ def retrieve_encryption_key():
 encryption_key = retrieve_encryption_key()
 logger = CustomLogger(LOG_FILE, encryption_key=encryption_key)
 
-# Initialize the ML model
+# Function to check and download necessary spaCy models
+def ensure_spacy_models(*models):
+    for model in models:
+        try:
+            spacy.load(model)  # Try to load the model
+            print(f"Model {model} is already installed.")
+        except OSError:
+            print(f"Model {model} not found. Installing...")
+            # Install the model using subprocess to ensure compatibility with the environment
+            subprocess.check_call([sys.executable, "-m", "spacy", "download", model])
+
+# Initialize the ML model and ensure necessary models are downloaded
 ml_model = MLModel(logger)
+ensure_spacy_models('en_core_web_trf', 'en_core_web_sm')  # Add any other models you use
 
 # Initialize the database connection
 db = ChatDatabase(DATABASE_FILE)
