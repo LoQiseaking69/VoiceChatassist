@@ -22,18 +22,7 @@ pip install --upgrade pip
 
 # Install required Python packages
 echo "Installing required Python packages..."
-pip install toga==0.3.0.dev26 \
-             cryptography==3.4 \
-             spacy==3.0 \
-             nltk==3.6 \
-             pyttsx3==2.90 \
-             SpeechRecognition==3.8 \
-             transformers==4.5 \
-             aiosqlite==0.17.0 \
-             huggingface_hub==0.1.0 \
-             beautifulsoup4==4.9.3 \
-             requests==2.25 \
-             python-dateutil==2.8.1
+pip install -r requirements.txt
 
 # Download and setup NLP models
 echo "Downloading and setting up SpaCy models..."
