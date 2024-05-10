@@ -28,12 +28,12 @@ jobs:
       - name: Create and build Windows application
         run: |
           cd voice-activated-assistant
-          briefcase create windows --bundle com.hermitech.voiceassistant
-          briefcase build windows --bundle com.hermitech.voiceassistant
-          briefcase package windows --bundle com.hermitech.voiceassistant
+          briefcase create windows
+          briefcase build windows
+          briefcase package windows
 
       - name: Upload Windows Executable
         uses: actions/upload-artifact@v2
         with:
           name: windows-executable
-          path: windows/voice-activated-assistant/dist/*.msi
+          path: voice-activated-assistant/windows/dist/*.msi
