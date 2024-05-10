@@ -5,7 +5,12 @@ import logging
 class ChatDatabase:
     def __init__(self, database_path):
         self.database_path = database_path
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        self.logger.addHandler(stream_handler)
 
     async def init_db(self):
         try:
@@ -26,9 +31,9 @@ class ChatDatabase:
                     );
                 ''')
                 await db.commit()
-                logging.info("Database initialized and tables created.")
+                self.logger.info("Database initialized and tables created.")
         except Exception as e:
-            logging.error(f"Error initializing database: {e}")
+            self.logger.error(f"Error initializing database: {e}")
             raise
 
     async def update_response_frequency(self, response):
@@ -40,18 +45,18 @@ class ChatDatabase:
                     WHERE response = ?
                 ''', (response,))
                 await db.commit()
-                logging.info(f"Updated frequency for response: {response}")
+                self.logger.info(f"Updated frequency for response: {response}")
         except Exception as e:
-            logging.error(f"Error updating response frequency: {e}")
+            self.logger.error(f"Error updating response frequency: {e}")
             raise
 
     async def close(self):
         try:
             async with aiosqlite.connect(self.database_path) as db:
                 await db.close()
-                logging.info("Database connection closed successfully.")
+                self.logger.info("Database connection closed successfully.")
         except Exception as e:
-            logging.error(f"Error closing database connection: {e}")
+            self.logger.error(f"Error closing database connection: {e}")
             raise
 
 if __name__ == "__main__":
