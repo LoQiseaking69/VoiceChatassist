@@ -20,28 +20,20 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Create virtual environment and activate
+      - name: Install dependencies and build with PyInstaller
         run: |
           python -m venv venv
           .\venv\Scripts\activate
-        working-directory: ${{github.workspace}}/voice-activated-assistant
-
-      - name: Upgrade pip and install dependencies
-        run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-        working-directory: ${{github.workspace}}/voice-activated-assistant
-
-      - name: Build and package application using PyInstaller
-        run: |
+          pip install pyinstaller
           pyinstaller --onefile --windowed main.py
         working-directory: ${{github.workspace}}/voice-activated-assistant
 
-      - name: Deactivate virtual environment and clean up cache
+      - name: Cleanup
         run: |
           deactivate
-          git clean -ffdx
-          rm -rf venv/
+          git clean -ffdx --exclude='!venv/'
         working-directory: ${{github.workspace}}/voice-activated-assistant
 
       - name: Upload Windows Executable
