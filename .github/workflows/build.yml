@@ -25,11 +25,14 @@ jobs:
           pip install --upgrade pip
           pip install briefcase
 
-      - name: Create and build Windows application
+      - name: Build Windows application
         run: |
           cd voice-activated-assistant
-          briefcase create windows
           briefcase build windows
+
+      - name: Package Windows application
+        run: |
+          cd voice-activated-assistant
           briefcase package windows
 
       - name: Upload Windows Executable
