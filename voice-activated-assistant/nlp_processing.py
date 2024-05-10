@@ -8,6 +8,7 @@ import logging
 
 # Initialize the logger
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load spaCy model and NLTK resources
 nlp = spacy.load('en_core_web_trf')
@@ -19,19 +20,23 @@ recognizer = sr.Recognizer()
 microphone = sr.Microphone()
 
 # Create an instance of MLModel
-ml_model = MLModel()
+ml_model = MLModel(logger)
 
 def analyze_text(text):
-    # Enhanced NLP processing with machine learning integration
-    doc = nlp(text)
-    entities = [(ent.text, ent.label_) for ent in doc.ents]
-    sentiment = ml_model.analyze_sentiment(text)  # Analyze sentiment using ML
-    summary = ml_model.summarize_text(text)  # Summarize text using ML
-    
-    # Log the analysis results
-    logging.info(f'Entities: {entities}, Sentiment: {sentiment}, Summary: {summary}')
-    
-    return entities, sentiment, summary
+    try:
+        # Enhanced NLP processing with machine learning integration
+        doc = nlp(text)
+        entities = [(ent.text, ent.label_) for ent in doc.ents]
+        sentiment = ml_model.analyze_sentiment(text)  # Analyze sentiment using ML
+        summary = ml_model.summarize_text(text)  # Summarize text using ML
+        
+        # Log the analysis results
+        logger.info(f'Entities: {entities}, Sentiment: {sentiment}, Summary: {summary}')
+        
+        return entities, sentiment, summary
+    except Exception as e:
+        logger.error(f"Error in text analysis: {e}")
+        return [], None, None
 
 def listen_and_respond():
     with microphone as source:
@@ -44,14 +49,14 @@ def listen_and_respond():
             engine.say(response)
             engine.runAndWait()
         except Exception as e:
-            logging.error(f"Error in speech recognition or response generation: {e}")
+            logger.error(f"Error in speech recognition or response generation: {e}")
             engine.say("Sorry, I didn't catch that. Could you repeat?")
             engine.runAndWait()
 
 def generate_response_based_on_analysis(analysis_results):
     # This function would generate intelligent responses based on the analysis
     entities, sentiment, summary = analysis_results
-    if sentiment > 0.5:
+    if sentiment and sentiment > 0.5:
         return "That sounds positive! How can I assist further?"
     else:
         return "I'm here to help. Tell me more."
