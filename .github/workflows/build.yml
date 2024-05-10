@@ -20,13 +20,15 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies and build with PyInstaller
+      - name: Execute deploy script
         run: |
-          python -m venv venv
+          ./deploy.sh
+        working-directory: ${{github.workspace}}/voice-activated-assistant
+        shell: bash
+
+      - name: Build Executable with PyInstaller
+        run: |
           .\venv\Scripts\activate
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
           pyinstaller --onefile --windowed main.py
         working-directory: ${{github.workspace}}/voice-activated-assistant
 
