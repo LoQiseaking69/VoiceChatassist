@@ -10,42 +10,34 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}/voice-activated-assistant
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
+      - name: Set up Python and dependencies
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-
-      - name: Create virtual environment and activate
         run: |
           python -m venv venv
           .\venv\Scripts\activate
-        working-directory: ${{github.workspace}}/voice-activated-assistant
-
-      - name: Upgrade pip and install dependencies
-        run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-        working-directory: ${{github.workspace}}/voice-activated-assistant
 
-      - name: Build and package application using PyInstaller
-        run: |
-          pyinstaller --onefile --windowed main.py
-        working-directory: ${{github.workspace}}/voice-activated-assistant
+      - name: Build application with PyInstaller
+        run: pyinstaller --onefile --windowed main.py
 
-      - name: Deactivate virtual environment and clean up cache
+      - name: Cleanup
         run: |
           deactivate
-          git clean -ffdx
-          rm -rf venv/
-        working-directory: ${{github.workspace}}/voice-activated-assistant
+          git clean -ffdx --exclude='!venv/'
 
       - name: Upload Windows Executable
         uses: actions/upload-artifact@v2
         with:
           name: windows-executable
-          path: ${{github.workspace}}/voice-activated-assistant/dist/main.exe
+          path: dist/main.exe
