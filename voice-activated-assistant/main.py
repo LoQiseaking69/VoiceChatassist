@@ -1,7 +1,8 @@
 import asyncio
-import toga
-from toga.style import Pack
-from toga.style.pack import COLUMN
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 from cryptography.fernet import Fernet
 from database_interaction import ChatDatabase
 from ml import MLModel
@@ -12,7 +13,7 @@ from nlp_processing import listen_and_respond, analyze_text
 # Constants
 LOG_FILE = 'app.log'
 DATABASE_FILE = 'chat_memory.db'
-ENCRYPTION_KEY_FILE = 'encryption_key.key'  # File containing the encryption key
+ENCRYPTION_KEY_FILE = 'encryption_key.key'
 
 # Function to retrieve the encryption key
 def retrieve_encryption_key():
@@ -33,25 +34,23 @@ ml_model = MLModel(logger)
 # Initialize the database connection
 db = ChatDatabase(DATABASE_FILE)
 
-class VoiceAssistantApp(toga.App):
-    def startup(self):
+class VoiceAssistantApp(App):
+    def build(self):
         # Ensure the database is initialized asynchronously
-        self.init_db_async()
-
-        # Setup main window
-        self.main_window = toga.MainWindow(title="Voice-Activated Personal Assistant")
-        self.main_window.size = (640, 480)
+        asyncio.create_task(self.init_db_async())
 
         # Setup UI components
-        self.label = toga.Label('Speak into your microphone and the assistant will respond.')
-        self.button = toga.Button('Start Listening', on_press=self.listen)
-        self.response_label = toga.Label('Response will appear here...')
+        self.label = Label(text='Speak into your microphone and the assistant will respond.')
+        self.button = Button(text='Start Listening', on_press=self.listen)
+        self.response_label = Label(text='Response will appear here...')
 
         # Layout
-        box = toga.Box(children=[self.label, self.button, self.response_label],
-                       style=Pack(direction=COLUMN, padding=10))
-        self.main_window.content = box
-        self.main_window.show()
+        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        layout.add_widget(self.label)
+        layout.add_widget(self.button)
+        layout.add_widget(self.response_label)
+
+        return layout
 
     async def init_db_async(self):
         try:
@@ -71,7 +70,7 @@ class VoiceAssistantApp(toga.App):
             response = f"Entities: {entities}\nSentiment: {sentiment}\nSummary: {summary}"
             self.response_label.text = response
 
-    def listen(self, widget):
+    def listen(self, instance):
         # Start listening to the microphone and process audio
         asyncio.create_task(self.process_audio())
 
@@ -79,8 +78,5 @@ class VoiceAssistantApp(toga.App):
         # Cleanly close the database connection when the application is closed
         asyncio.run(db.close())
 
-def main():
-    return VoiceAssistantApp()
-
 if __name__ == '__main__':
-    main().main_loop()
+    VoiceAssistantApp().run()
