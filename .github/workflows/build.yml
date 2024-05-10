@@ -12,36 +12,33 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
+      - name: Set up Python and Create virtual environment
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-
-      - name: Create virtual environment
-        run: python -m venv venv
+      - run: python -m venv venv
         working-directory: voice-activated-assistant
 
-      - name: Activate virtual environment
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies and build application
         run: |
           .\venv\Scripts\activate
           pip install --upgrade pip
-        working-directory: voice-activated-assistant
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-        working-directory: voice-activated-assistant
-
-      - name: Build and Package Windows application
-        run: |
+          pip install -r requirements.txt
           briefcase build windows
           briefcase package windows
         working-directory: voice-activated-assistant
 
       - name: Deactivate virtual environment
         run: deactivate
+        working-directory: voice-activated-assistant
+
+      - name: Clean up cache
+        run: |
+          git clean -ffdx
+          rm -rf venv/
         working-directory: voice-activated-assistant
 
       - name: Upload Windows Executable
